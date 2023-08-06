@@ -60,6 +60,9 @@ class Game():
     def game_over(self):
         if not 0 < self.snake.body[0].x <= 18 or not 0 < self.snake.body[0].y <= 15 :
             pygame.quit()
+        for part in self.snake.body[1:]:
+            if part == self.snake.body[0]:
+                pygame.quit()
 
 
 
