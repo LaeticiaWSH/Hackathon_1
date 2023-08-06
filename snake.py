@@ -52,6 +52,10 @@ class Snake:
     def add_body(self):
         self.new_part = True
 
+    def reset(self):
+        self.body = [Vector2(5,10),Vector2(4,10),Vector2(3,10)]
+        
+
 
 class Game():
     def __init__(self):
@@ -81,10 +85,11 @@ class Game():
 
     def game_over(self):
         if not 0 < self.snake.body[0].x <= 18 or not 0 < self.snake.body[0].y <= 15 :
-            pygame.quit()
+            self.restart()
+
         for part in self.snake.body[1:]:
             if part == self.snake.body[0]:
-                pygame.quit()
+                self.restart()
 
     def score(self):
         score_text = str(len(self.snake.body) - 3)
@@ -112,7 +117,10 @@ class Game():
     def text(self,text,font,text_col,x,y):
         txt = font.render(text,True,text_col)
         screen.blit(txt,(x,y))
-        
+
+    def restart(self):
+        self.snake.reset()
+    
 
         
 
@@ -154,6 +162,8 @@ while run:    #A statement that will keep the screen open .
             if event.key == pygame.K_RIGHT:
                 if snake_game.snake.direction.x != -1:
                     snake_game.snake.direction = Vector2(1,0)
+            
+
             
 
 
