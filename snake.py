@@ -6,7 +6,8 @@ class Fruits:
        self.random_pos()
     def create_fruit(self):
         fruit_cicle = pygame.Rect(int(self.position.x * screen_width),(self.position.y* screen_width),screen_width,screen_width)
-        pygame.draw.rect(screen,(225,0,0),fruit_cicle)
+        screen.blit(melon,fruit_cicle)
+        #pygame.draw.rect(screen,(225,0,0),fruit_cicle)
     def random_pos(self):
         self.x = random.randint(1,18)
         self.y = random.randint(1,15)
@@ -53,6 +54,7 @@ class Game():
     def create_objects(self):
         self.fruit.create_fruit()
         self.snake.create_snake()
+        self.score()
     def collision(self):
         if self.fruit.position == self.snake.body[0]:
             self.fruit.random_pos()
@@ -64,8 +66,13 @@ class Game():
             if part == self.snake.body[0]:
                 pygame.quit()
 
+    def score(self):
+        score_text = str(len(self.snake.body) - 3)
+        score_surface = game_font.render(score_text,True,(0,0,0))
+        score_rect =score_surface.get_rect(center = (400,20))
+        screen.blit(score_surface,score_rect)
 
-
+        
 
 pygame.init() #It's mandatory to initialize the import pygame.
 screen_width = 40
@@ -74,8 +81,8 @@ screen_height = 20
 screen = pygame.display.set_mode((800,700))
 pygame.display.set_caption("Game")
 clock = pygame.time.Clock()
-melon =pygame.image.load('pngegg-2.png').convert_alpha()
-
+melon =pygame.image.load('pngegg.png').convert_alpha()
+game_font = pygame.font.Font(None,25)
 snake_game = Game()
 
 run = True
