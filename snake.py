@@ -74,7 +74,7 @@ screen_height = 20
 screen = pygame.display.set_mode((800,700))
 pygame.display.set_caption("Game")
 clock = pygame.time.Clock()
-#melon =pygame.image.load('potion.png').convert_alpha()
+melon =pygame.image.load('pngegg-2.png').convert_alpha()
 
 snake_game = Game()
 
