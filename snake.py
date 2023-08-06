@@ -1,5 +1,6 @@
 import pygame,random
 from pygame.math import Vector2
+import psycopg2
 
 class Fruits:
     def __init__(self):
@@ -62,6 +63,7 @@ class Game():
         self.snake = Snake()
         self.fruit = Fruits()
         self.valid = "Yes"
+        self.score_text = 0
     def update(self):
         self.snake.move_snake()
         self.collision()
@@ -85,10 +87,13 @@ class Game():
 
     def game_over(self):
         if not 0 < self.snake.body[0].x <= 18 or not 0 < self.snake.body[0].y <= 15 :
+            self.store_score()
             self.restart()
 
         for part in self.snake.body[1:]:
             if part == self.snake.body[0]:
+                self.store_score()
+                
                 self.restart()
 
     def score(self):
@@ -97,6 +102,7 @@ class Game():
         score_rect =score_surface.get_rect(center = (400,21))
         screen.blit(score_surface,score_rect)
         self.text("Score :",game_font,(0,0,0),320,10)
+        self.score_text = score_text
         
 
     def change_color(self):
@@ -120,10 +126,38 @@ class Game():
 
     def restart(self):
         self.snake.reset()
-    
-
         
 
+    def store_score(self):
+        HOSTNAME = 'localhost'
+        USERNAME = 'laeticiaoceane'
+        PASSWORD = '12345678'
+        DATABASE = 'game'
+
+        connection = psycopg2.connect(host=HOSTNAME, user=USERNAME, password=PASSWORD, dbname=DATABASE )
+
+        cursor = connection.cursor()
+        query = "INSERT INTO gamer(score_pt) VALUES (%s)"
+        cursor.execute(query,(self.score_text))
+        connection.commit()
+        cursor.close()
+        connection.close()
+    def high_score(self):
+        HOSTNAME = 'localhost'
+        USERNAME = 'laeticiaoceane'
+        PASSWORD = '12345678'
+        DATABASE = 'game'
+
+        connection = psycopg2.connect(host=HOSTNAME, user=USERNAME, password=PASSWORD, dbname=DATABASE )
+
+        cursor = connection.cursor()
+        query = "SELECT user_id,score_pt FROM gamer ORDER BY score_pt DESC"
+        cursor.execute(query)
+        top_scores = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        print(top_scores)
+    
         
 
 pygame.init() #It's mandatory to initialize the import pygame.
@@ -163,12 +197,6 @@ while run:    #A statement that will keep the screen open .
                 if snake_game.snake.direction.x != -1:
                     snake_game.snake.direction = Vector2(1,0)
             
-
-            
-
-
-
-
     screen.fill((88,129,87))     # fill the screen with a color to wipe away anything from last frame
     pygame.draw.rect(screen,(218,215,205),(35,35,730,610),width = 4)    #This is the border white
 
@@ -181,4 +209,3 @@ while run:    #A statement that will keep the screen open .
 
 
 pygame.quit() # The function that will close the screen.
-
