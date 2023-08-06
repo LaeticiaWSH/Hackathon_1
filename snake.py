@@ -4,9 +4,10 @@ from pygame.math import Vector2
 class Fruits:
     def __init__(self):
        self.random_pos()
+       self.ele = melon
     def create_fruit(self):
         fruit_cicle = pygame.Rect(int(self.position.x * screen_width),(self.position.y* screen_width),screen_width,screen_width)
-        screen.blit(melon,fruit_cicle)
+        screen.blit(self.ele,fruit_cicle)
         #pygame.draw.rect(screen,(225,0,0),fruit_cicle)
     def random_pos(self):
         self.x = random.randint(1,18)
@@ -14,6 +15,15 @@ class Fruits:
         # self.x = 18
         # self.y = 1
         self.position = Vector2(self.x,self.y)
+    def random_obj(self):
+        list = [melon,potion]
+        self.ele = random.choice(list)
+        if self.ele ==  melon:
+            return True
+        else:
+            return False
+        
+
 
          
 class Snake:
@@ -21,11 +31,12 @@ class Snake:
         self.body = [Vector2(5,10),Vector2(4,10),Vector2(3,10)]
         self.direction = Vector2(1,0)
         self.new_part = False
+        self.color = 198,172,143
 
     def create_snake(self):
         for parts in self.body:
             parts_rect = pygame.Rect(int(parts.x * screen_width),int(parts.y * screen_width),screen_width,screen_width)
-            pygame.draw.rect(screen,(217,237,146),parts_rect)
+            pygame.draw.rect(screen,(self.color),parts_rect,border_radius = 40)
         
     def move_snake(self):
         if self.new_part == True:
@@ -46,6 +57,7 @@ class Game():
     def __init__(self):
         self.snake = Snake()
         self.fruit = Fruits()
+        self.valid = "Yes"
     def update(self):
         self.snake.move_snake()
         self.collision()
@@ -57,8 +69,16 @@ class Game():
         self.score()
     def collision(self):
         if self.fruit.position == self.snake.body[0]:
+            self.fruit.random_obj()
             self.fruit.random_pos()
             self.snake.add_body()
+            self.change_color()
+
+        for part in self.snake.body[1:]:
+            if part == self.fruit.position:
+                self.fruit.random_pos()
+            
+
     def game_over(self):
         if not 0 < self.snake.body[0].x <= 18 or not 0 < self.snake.body[0].y <= 15 :
             pygame.quit()
@@ -69,12 +89,37 @@ class Game():
     def score(self):
         score_text = str(len(self.snake.body) - 3)
         score_surface = game_font.render(score_text,True,(0,0,0))
-        score_rect =score_surface.get_rect(center = (400,20))
+        score_rect =score_surface.get_rect(center = (400,21))
         screen.blit(score_surface,score_rect)
+        self.text("Score :",game_font,(0,0,0),320,10)
+        
+
+    def change_color(self):
+            c = self.fruit.random_obj()
+            if c == True:
+                self.snake.color = 198,172,143
+                self.valid = "Yes"
+            else:
+                self.snake.color = 0,180,216
+                self.valid ="No"
+                
+    def change_text(self):
+        if  self.valid == "Yes":
+            self.text("I love melons",game_font,(231,111,81),320,650)
+        else:
+            self.text("I'm blue dadadee dadada.",game_font,(42,157,143),310,650)
+    
+    def text(self,text,font,text_col,x,y):
+        txt = font.render(text,True,text_col)
+        screen.blit(txt,(x,y))
+        
+
+        
 
         
 
 pygame.init() #It's mandatory to initialize the import pygame.
+#color = 198,172,143
 screen_width = 40
 screen_height = 20
 #screen = pygame.display.set_mode((screen_width*screen_height,screen_width*screen_height)) # pygame.display.set_mode, it  sets the screen to be displayed - display surface.
@@ -82,7 +127,8 @@ screen = pygame.display.set_mode((800,700))
 pygame.display.set_caption("Game")
 clock = pygame.time.Clock()
 melon =pygame.image.load('pngegg.png').convert_alpha()
-game_font = pygame.font.Font(None,25)
+potion = pygame.image.load('potion.png').convert_alpha()
+game_font = pygame.font.SysFont('leelawadeeuisemilight',30)
 snake_game = Game()
 
 run = True
@@ -115,11 +161,12 @@ while run:    #A statement that will keep the screen open .
 
     screen.fill((88,129,87))     # fill the screen with a color to wipe away anything from last frame
     pygame.draw.rect(screen,(218,215,205),(35,35,730,610),width = 4)    #This is the border white
-    
-    snake_game.create_objects()
 
+    snake_game.create_objects()
+    snake_game.change_text()
     
     pygame.display.update()
+    #pygame.display.flip()
     clock.tick(70)
 
 
