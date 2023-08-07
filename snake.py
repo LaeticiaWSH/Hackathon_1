@@ -84,17 +84,17 @@ class Game():
             if part == self.fruit.position:
                 self.fruit.random_pos()
             
-
     def game_over(self):
         if not 0 < self.snake.body[0].x <= 18 or not 0 < self.snake.body[0].y <= 15 :
             self.store_score()
-            self.restart()
+            #self.restart()
+            pygame.quit()
 
         for part in self.snake.body[1:]:
             if part == self.snake.body[0]:
                 self.store_score()
-                
-                self.restart()
+                pygame.quit()
+                #self.restart()
 
     def score(self):
         score_text = str(len(self.snake.body) - 3)
