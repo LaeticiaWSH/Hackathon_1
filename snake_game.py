@@ -170,8 +170,8 @@ class Game():
 
     def store_score(self):
         HOSTNAME = 'localhost'
-        USERNAME = 'laeticiaoceane'
-        PASSWORD = '12345678'
+        USERNAME = 'himanishloll'
+        PASSWORD = 'alpha151198l'
         DATABASE = 'game'
 
         connection = psycopg2.connect(host=HOSTNAME, user=USERNAME, password=PASSWORD, dbname=DATABASE )
@@ -184,8 +184,8 @@ class Game():
         connection.close()
     def high_score(self):
         HOSTNAME = 'localhost'
-        USERNAME = 'laeticiaoceane'
-        PASSWORD = '12345678'
+        USERNAME = 'himanishloll'
+        PASSWORD = 'alpha151198l'
         DATABASE = 'game'
 
         connection = psycopg2.connect(host=HOSTNAME, user=USERNAME, password=PASSWORD, dbname=DATABASE )
